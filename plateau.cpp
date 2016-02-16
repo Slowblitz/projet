@@ -129,7 +129,7 @@ return b;
 
 }
 
-void plateau::rotationmoin90(int Taille, int *a[][])
+/*void plateau::rotationmoin90(int Taille, int *a[][])
 {
 int tmp;
 for (int i=0; i<n/2; i++){
@@ -140,7 +140,7 @@ for (int i=0; i<n/2; i++){
                 a[n-i-1][n-j-1]=a[n-j-1][i];
                 a[n-j-1][i]=tmp;
 
-}
+}*/
 /**
  * @brief [destructeur]
  * @details [destructrion de l objet plateau]
