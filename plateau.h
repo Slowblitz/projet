@@ -20,4 +20,6 @@ class plateau
         void set(int i, int j, int value);
         void set2();
         void display(string plateau_name ,int &petit_plateau);
+        void rotationmoin90(int Taille, int a[][]);
+
 };
