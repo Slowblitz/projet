@@ -129,18 +129,42 @@ return b;
 
 }
 
-/*void plateau::rotationmoin90(int Taille, int *a[][])
-{
-int tmp;
-for (int i=0; i<n/2; i++){
-        for (int j=i; j<n-i-1; j++){
-                tmp=a[i][j];
-                a[i][j]=a[j][n-i-1];
-                a[j][n-i-1]=a[n-i-1][n-j-1];
-                a[n-i-1][n-j-1]=a[n-j-1][i];
-                a[n-j-1][i]=tmp;
 
-}*/
+void plateau::rotationmoin90(int k, int l)
+{
+int i=0;
+int j=0;
+int tmp;
+int tmp1[petit_plateau][petit_plateau];
+int tmp2[petit_plateau][petit_plateau];
+for(int r =k;r<k+petit_plateau;r++){
+    for(int m=l; m<petit_plateau;m++){
+        tmp1[i][j]=m_plateau[r][m];
+        
+        j++;
+      }
+      i++;
+    };
+
+for (i=0; i<petit_plateau; i++){
+
+        for (j=0; j<petit_plateau; j++){
+         
+                tmp1[petit_plateau-1-j][i]=tmp2[i][j];
+              
+
+}
+}
+i=0;
+j=0;
+for(int r =k;r<k+petit_plateau;r++){
+    for(int m=l; m<petit_plateau;m++){
+        m_plateau[r][m]=tmp2[i][j];
+        j++;
+      }
+      i++;
+    }
+}
 /**
  * @brief [destructeur]
  * @details [destructrion de l objet plateau]
@@ -190,7 +214,16 @@ if (i==1) {
                         
                       
 
+
                          }
+          while(42){
+          int x,y =0;
+          cout<<"quelle tablier:"<<endl ;
+          cin>>x;
+          cin>>y;
+          p.rotationmoin90(x,y);
+          p.display("tablier apres rotationmoin90",v);
+        }
 
         }
 
