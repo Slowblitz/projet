@@ -3,7 +3,7 @@
 #include <map>
 #include <iostream>
 #include "string.h"
-
+#include <stdlib.h>
 /**
  * @brief [constructeur]
  * @details [constructeur avec argument]
@@ -14,11 +14,23 @@
  */
 plateau::plateau(int n,int m, int P_size , FILE * m_log)
 {
+  nb_aligne = 2;
     m_size = n ;
     l_size=m ;
     petit_plateau=P_size;
     m_plateau = new int*[n];
     for(int i = 0;i < n; ++i) m_plateau[i] = new int[m];
+      for(int l=0 ; l<n; l++)
+          for (int v = 0; v < m; v++)
+          {
+           m_plateau[l][v]=0;
+          }
+
+    for (int i = 0; i < 2; ++i)
+    {
+      J[i].color=i+1;
+      J[i].Win=0;
+    }
 }
 
 /**
@@ -53,17 +65,17 @@ void plateau::set(int i, int j, int value)
  * @brief [setter]
  * @details [setter sans argument ]
  */
-void plateau::set2()
+void plateau::set2(int value)
 { int i,j;
   std::cout << "Quelle ligne:" ;
   std::cin>>i;
   std::cout << "Quelle colonne:" ;
   std::cin>>j;
- if (m_plateau[i][j] == 1){
+ if (m_plateau[i][j] != 0){
                           cout<<"deja utilisé !!"<<endl;
-                          return;
+                          return set2(value);
                           }
-  m_plateau[i][j] = 1;
+  m_plateau[i][j] = J[value].color;
 }
 
  /**
@@ -80,9 +92,8 @@ void plateau::display(string plateau_name,int &petit_plateau)
     {  if(i%petit_plateau==0 && i != 0)std::cout<<endl;
         for(int j = 0;j < l_size;++j)
         {   if(j%petit_plateau==0 && j != 0)std::cout <<"| ";
-            double value = get(i,j);
-            cout<< value;
-            if(j != m_size - 1) cout<<" ";
+            cout<<m_plateau[i][j];
+        if(j != m_size - 1) cout<<" ";
         }
      cout<<endl;
     }
@@ -130,44 +141,34 @@ return b;
 }
 
 
-void plateau::rotationmoin90(int k, int l)
+void plateau::rotation(int k, int l,char c)
 {
-int i=0;
-int j=0;
-int tmp;
-int tmp1[petit_plateau][petit_plateau];
-int tmp2[petit_plateau][petit_plateau];
-for(int r =k;r<k+petit_plateau;r++){
-    for(int m=l; m<petit_plateau;m++){
-        tmp1[i][j]=m_plateau[r][m];
-        
-        j++;
-      }
-      i++;
-    };
+  int tmp[petit_plateau][petit_plateau];
+  for (int i = 0; i < petit_plateau; ++i)
+  {
+    for (int j = 0; j < petit_plateau; ++j)
 
-for (i=0; i<petit_plateau; i++){
-
-        for (j=0; j<petit_plateau; j++){
-         
-                tmp1[petit_plateau-1-j][i]=tmp2[i][j];
-              
-
-}
-}
-i=0;
-j=0;
-for(int r =k;r<k+petit_plateau;r++){
-    for(int m=l; m<petit_plateau;m++){
-        m_plateau[r][m]=tmp2[i][j];
-        j++;
-      }
-      i++;
+    {
+    if (c=='<')
+      tmp[petit_plateau-1-j][i] = m_plateau[i+k][j+l];
+  	else
+  		tmp[j][petit_plateau-1-i] = m_plateau[i+k][j+l];
     }
+  }
+
+  for (int i = 0; i < petit_plateau; ++i)
+  {
+    for (int j = 0; j < petit_plateau; ++j)
+    {
+      m_plateau[i+k][j+l] = tmp[i][j];
+    }
+  }
 }
+
+
 /**
  * @brief [destructeur]
- * @details [destructrion de l objet plateau]
+ * @details [destruction de l objet plateau]
  * @return [description]
  */
 plateau::~plateau()
@@ -178,54 +179,96 @@ plateau::~plateau()
 }
 
 
-int main(int argc, char const *argv[]) {
-
-int i,j,k,v,joueur;
-char quitter;
-std::cout<<endl<<" ----------------------- MENU -----------------------"<<endl<<endl;
-std::cout << "1/ commencer une nouvelle partie" << std::endl;
-std::cout << "2/ quitter" << std::endl<<std::endl;
-std::cin >> i;
-
-if (i==1) {
-    std::cout << "Nombre de joueur: ";
-    std::cin >> joueur;
-    std::cout << "Longeur du tablier : ";
-    std::cin >> j;
-    std::cout<<"Largeurdu tablier : ";
-    std::cin >> k;
-    std::cout<<"case des petits plateaux :";
-    std::cin >> v;
-    plateau p(k * v,j * v,v);
-    p.display("tablier",v);
-
-    while (quitter!='Q') {
-                        quitter='v';
-                        for (int h= 0;  h< joueur; ++h)
-                        {
-
-                        cout<<"joueur:"<<h<< endl;
-                        p.set2();
-                        p.display("tablier",v);
-                      }
-                        std::cout << "pour quitter : Q" << std::endl;
-                        std::cout << "n'importe quelle touche pour continuer" << std::endl;
-                        cin>> quitter;
-                        
-                      
 
 
-                         }
-          while(42){
-          int x,y =0;
-          cout<<"quelle tablier:"<<endl ;
-          cin>>x;
-          cin>>y;
-          p.rotationmoin90(x,y);
-          p.display("tablier apres rotationmoin90",v);
-        }
-
-        }
-
-  return 0;
+string plateau::Vainqueur() {
+  if (J[0].Win == true){return J[0].name;}
+  else {return J[0].name;}
 }
+
+bool plateau::Aligner() {
+  int tmp = 0;
+  bool btmp = false;
+  std::cout<<"nike"<<endl;
+  for (int i = 0; i < l_size; ++i)
+  {
+    for (int j = 0; j < m_size; ++j)
+    {
+      if (m_plateau[i][j] != 0)
+      {
+        tmp = m_plateau[i][j];
+
+        if(((l_size-j)+(m_size-i) > nb_aligne) && ((j+nb_aligne-1) < m_size && (i+nb_aligne-1) < m_size)){
+          btmp = test_diagonal_D(i,j,tmp);
+          if (btmp == true) {J[tmp-2].Win = true; return true;}
+        } //fonction diagonal >
+        if (( (l_size-j)+(m_size-i) > nb_aligne) && ((j-nb_aligne+1) >= 0 ) && ((i+nb_aligne-1) < m_size)) {
+          btmp = test_diagonal_G(i,j,tmp);
+          if (btmp == true) {J[tmp-1].Win = true; return true;  
+        } //fonction diagonal <
+        if ((m_size-j)>= nb_aligne) {
+          btmp = test_ligne(i,j,tmp);
+          if (btmp == true) {J[tmp-1].Win = true; return true;}
+        }// on test la ligne
+        if ((l_size-i)>= nb_aligne) {
+          btmp = test_colonne(i,j,tmp);
+          if (btmp == true) {J[tmp-1].Win = true; return true;}
+        }// on test la colonne
+      }
+    }
+  }
+  return false;
+}
+}
+bool plateau::test_diagonal_D(int x, int y, int color) {
+  int compteur = 0;
+  while(m_plateau[x][y] == color) {
+    compteur++,x++,y++;
+    if(compteur >= nb_aligne) return true;
+  }
+  return false;
+}
+bool plateau::test_diagonal_G(int x, int y, int color) {
+  int compteur = 0;
+  while(m_plateau[x][y] == color) {
+    compteur++,x++,y--;
+    if(compteur >= nb_aligne) return true;
+  }
+  return false;
+}
+bool plateau::test_ligne(int x, int y, int color) {
+  std::cout << x << " " << y << std::endl;
+  int compteur = 0;
+  while(m_plateau[x][y] == color) {
+    compteur++,y++;
+    if(compteur >= nb_aligne) return true;
+  }
+  return false;
+}
+bool plateau::test_colonne(int x, int y, int color) {
+  int compteur = 0;
+  while(m_plateau[x][y] == color) {
+    compteur++,x++;
+    if(compteur >= nb_aligne) return true;
+  }
+  return false;
+}
+
+void plateau::name(string s )
+{
+  if (J[0].name !="")
+    J[1].name =s;
+  else 
+    J[0].name =s;
+
+}
+string plateau::getname(int x )
+{
+ return J[x].name;
+
+}
+
+
+
+
+
