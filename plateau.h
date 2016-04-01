@@ -16,14 +16,14 @@ class plateau
 {
     int nb_aligne;
     int petit_plateau;
-    int m_size;
+    int c_size;
     int l_size;
     int ** m_plateau;
     FILE * m_log;
     joueur J[2];
 
     public :
-        plateau(int n,int m,int, FILE * m_log = stderr);
+        plateau(int n,int m,int, int,FILE * m_log = stderr);
         ~plateau();
         bool read(char * file_name);
         double get(int i, int j);

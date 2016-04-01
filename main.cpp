@@ -6,7 +6,7 @@
 
 int main(int argc, char const *argv[]) {
 
-int i,j,k,v,joueur,xrot,yrot=0;
+int i,j,k,v,joueur,xrot,yrot,pions=0;
 string nom,WIN;
 char Srot;
 char quitter;
@@ -16,6 +16,8 @@ std::cout << "2/ quitter" << std::endl<<std::endl;
 std::cin >> i;
 
 if (i==1) {
+
+
     std::cout << "Nombre de joueur: ";
     std::cin >> joueur;
     std::cout << "Longeur du tablier : ";
@@ -24,7 +26,9 @@ if (i==1) {
     std::cin >> k;
     std::cout<<"case des petits plateaux :";
     std::cin >> v;
-    plateau p(k * v,j * v,v);
+    std::cout<<"combien de pions pour gagner:";
+    std::cin >> pions;
+    plateau p(k * v,j * v,v,pions);
     p.display("tablier",v);
     int k(1);
     for (int i = 0; i < joueur; ++i)
@@ -50,16 +54,13 @@ if (i==1) {
                           std::cout<<"Sens de la rotation </> : "<<std::endl;
                           std::cin>>Srot;
                           p.rotation(xrot,yrot,Srot);
-
-
-                            
-          
-      	
-
-        
-
+      
                          }
 
-  return 0;
-}
+                         cout<<"<"<<p.Vainqueur()<<">"<<endl;
+
+  
+  }
+
+
 }
